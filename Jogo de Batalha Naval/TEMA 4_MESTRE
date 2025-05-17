@@ -1,0 +1,117 @@
+#include <stdio.h>
+
+#define TAMANHO_TABULEIRO 10
+#define TAMANHO_NAVIO 3
+#define TAMANHO_HABILIDADE 5  // Tamanho das matrizes de habilidades
+
+// Função para inicializar o tabuleiro com água (0)
+void inicializarTabuleiro(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO]) {
+    for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
+        for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
+            tabuleiro[i][j] = 0;  // Inicializa com 0 (representando água)
+        }
+    }
+}
+
+// Função para exibir o tabuleiro
+void exibirTabuleiro(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO]) {
+    printf("\nTabuleiro de Batalha Naval:\n");
+    for (int i = 0; i < TAMANHO_TABULEIRO; i++) {
+        for (int j = 0; j < TAMANHO_TABULEIRO; j++) {
+            if (tabuleiro[i][j] == 0) printf("0 ");  // Água
+            else if (tabuleiro[i][j] == 3) printf("3 ");  // Navio
+            else if (tabuleiro[i][j] == 5) printf("5 ");  // Área afetada pela habilidade
+        }
+        printf("\n");
+    }
+}
+
+// Função para posicionar navios
+void posicionarNavios(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO]) {
+    tabuleiro[2][1] = 3;  // Navio na posição (2,1)
+    tabuleiro[2][2] = 3;  // Navio na posição (2,2)
+    tabuleiro[2][3] = 3;  // Navio na posição (2,3)
+
+    tabuleiro[5][4] = 3;  // Navio na posição (5,4)
+    tabuleiro[6][4] = 3;  // Navio na posição (6,4)
+    tabuleiro[7][4] = 3;  // Navio na posição (7,4)
+    
+    tabuleiro[3][3] = 3;  // Navio na posição (3,3)
+    tabuleiro[4][4] = 3;  // Navio na posição (4,4)
+    tabuleiro[5][5] = 3;  // Navio na posição (5,5)
+
+    tabuleiro[6][7] = 3;  // Navio na posição (6,7)
+    tabuleiro[7][6] = 3;  // Navio na posição (7,6)
+    tabuleiro[8][5] = 3;  // Navio na posição (8,5)
+}
+
+// Função para gerar a área de efeito em forma de cone
+void gerarCone(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO], int linha, int coluna) {
+    int cone[TAMANHO_HABILIDADE][TAMANHO_HABILIDADE] = { {0, 0, 1, 0, 0}, {0, 1, 1, 1, 0}, {1, 1, 1, 1, 1}, {0, 1, 1, 1, 0}, {0, 0, 1, 0, 0} };
+    
+    for (int i = 0; i < TAMANHO_HABILIDADE; i++) {
+        for (int j = 0; j < TAMANHO_HABILIDADE; j++) {
+            if (cone[i][j] == 1) {
+                int novaLinha = linha + i - 2;  // Ajuste para centralizar
+                int novaColuna = coluna + j - 2;  // Ajuste para centralizar
+                if (novaLinha >= 0 && novaLinha < TAMANHO_TABULEIRO && novaColuna >= 0 && novaColuna < TAMANHO_TABULEIRO) {
+                    tabuleiro[novaLinha][novaColuna] = 5;  // Marca área afetada pela habilidade
+                }
+            }
+        }
+    }
+}
+
+// Função para gerar a área de efeito em forma de cruz
+void gerarCruz(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO], int linha, int coluna) {
+    int cruz[TAMANHO_HABILIDADE][TAMANHO_HABILIDADE] = { {0, 0, 1, 0, 0}, {0, 1, 1, 1, 0}, {1, 1, 1, 1, 1}, {0, 1, 1, 1, 0}, {0, 0, 1, 0, 0} };
+
+    for (int i = 0; i < TAMANHO_HABILIDADE; i++) {
+        for (int j = 0; j < TAMANHO_HABILIDADE; j++) {
+            if (cruz[i][j] == 1) {
+                int novaLinha = linha + i - 2;  // Ajuste para centralizar
+                int novaColuna = coluna + j - 2;  // Ajuste para centralizar
+                if (novaLinha >= 0 && novaLinha < TAMANHO_TABULEIRO && novaColuna >= 0 && novaColuna < TAMANHO_TABULEIRO) {
+                    tabuleiro[novaLinha][novaColuna] = 5;  // Marca área afetada pela habilidade
+                }
+            }
+        }
+    }
+}
+
+// Função para gerar a área de efeito em forma de octaedro
+void gerarOctaedro(int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO], int linha, int coluna) {
+    int octaedro[TAMANHO_HABILIDADE][TAMANHO_HABILIDADE] = { {0, 1, 1, 1, 0}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {1, 1, 1, 1, 1}, {0, 1, 1, 1, 0} };
+    
+    for (int i = 0; i < TAMANHO_HABILIDADE; i++) {
+        for (int j = 0; j < TAMANHO_HABILIDADE; j++) {
+            if (octaedro[i][j] == 1) {
+                int novaLinha = linha + i - 2;  // Ajuste para centralizar
+                int novaColuna = coluna + j - 2;  // Ajuste para centralizar
+                if (novaLinha >= 0 && novaLinha < TAMANHO_TABULEIRO && novaColuna >= 0 && novaColuna < TAMANHO_TABULEIRO) {
+                    tabuleiro[novaLinha][novaColuna] = 5;  // Marca área afetada pela habilidade
+                }
+            }
+        }
+    }
+}
+
+int main() {
+    int tabuleiro[TAMANHO_TABULEIRO][TAMANHO_TABULEIRO];
+
+    // Inicializa o tabuleiro com água
+    inicializarTabuleiro(tabuleiro);
+
+    // Posiciona os navios no tabuleiro
+    posicionarNavios(tabuleiro);
+
+    // Aplica as habilidades (cone, cruz, octaedro) no tabuleiro
+    gerarCone(tabuleiro, 3, 3);    // Habilidade cone no centro (3,3)
+    gerarCruz(tabuleiro, 5, 5);    // Habilidade cruz no centro (5,5)
+    gerarOctaedro(tabuleiro, 7, 7); // Habilidade octaedro no centro (7,7)
+
+    // Exibe o tabuleiro
+    exibirTabuleiro(tabuleiro);
+
+    return 0;
+}
